@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:water_distribution_management/utils/cache_picture.dart';
 import 'package:water_distribution_management/utils/colors.dart';
 import 'package:water_distribution_management/utils/icons.dart';
 
@@ -24,36 +22,65 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    precacheSvgPicture(kLogoIcon);
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        alignment: Alignment.center,
         decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [kPrimaryColor, kLightOrangeColor])),
+            color: kWhiteColor),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                kLogoIcon,
-                height: 350,
+              Container( // Here 
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Image(
+                      image: AssetImage(kLogo),
+                      height: 95,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 12),
+                      color: kGrayColor,
+                      width: 2,
+                      height: MediaQuery.of(context).size.height * 0.11,
+                    ),
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "بلدية جنين",
+                            style: TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 18,
+                                height: 1,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            "مصلحة المياه",
+                            style: TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 34,
+                                height: 1,
+                                fontWeight: FontWeight.w700),
+                          ), 
+                          Text(
+                            "التحكم الاكتروني",
+                            style: TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 26,
+                                height: 1,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      )
+                  ],
+                ),
               ),
-              const Text(
-                "Basma",
-                style: TextStyle(
-                    color: kWhiteColor,
-                    fontSize: 44,
-                    fontWeight: FontWeight.w700),
-              )
             ],
           ),
         ),
@@ -63,21 +90,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _onSplashCompleted() async {
     
-    // User? user = await GetIt.I<AuthStore>().getUser();
-    // if (user != null) {
-    //   Navigator.pushAndRemoveUntil(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => HomePage(
-    //                 userType: user.type,
-    //               )),
-    //       (route) => false);
-    // } else {
-    //   Navigator.pushAndRemoveUntil(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (c) => const LoginSignUpPage(isLogIn: true)),
-    //       (route) => false);
-    // }
+print('rasheed');
   }
 }
