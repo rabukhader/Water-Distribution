@@ -20,7 +20,6 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
   final TextEditingController _registrationNumber = TextEditingController();
-  final TextEditingController _fullName = TextEditingController();
   bool _isLogin = true;
   bool _isCustomer = true;
 
@@ -44,69 +43,73 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
             const SizedBox(
               height: 50.0,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: DividerWithText(
+                  text: _isLogin ? "تسجيل الدخول" : "انشاء حساب"),
+            ),
             Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: DividerWithText(
-                      text: _isLogin ? "تسجيل الدخول" : "انشاء حساب"),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: _isLogin ? _loginForm() : _signUpForm()),
-                const SizedBox(
-                  height: 50,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: QPrimaryButton.icon(
-                        icon: const Icon(Icons.login),
-                        fontWeight: FontWeight.bold,
-                        label: _isLogin ? "تسجيل الدخول" : "انشاء حساب",
-                        onPressed: () => print('test'),
-                      ))
-                    ],
+                child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const SizedBox(
+                    height: 16,
                   ),
-                ),
-                const SizedBox(
-                  height: 22,
-                ),
-                TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _isCustomer = !_isCustomer;
-                        if (!_isLogin) _isLogin = true;
-                      });
-                    },
-                    child: Text(
-                      _isCustomer
-                          ? "تسجيل دخول الموظفين"
-                          : "تسجيل دخول المستهلكين",
-                      style: const TextStyle(color: kPrimaryColor, fontSize: 16),
-                    )),
-                _isLogin
-                    ? TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _isLogin = !_isLogin;
-                          });
-                        },
-                        child: const Text(
-                          "انشاء حساب",
-                          style: TextStyle(color: kPrimaryColor, fontSize: 16),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: _isLogin ? _loginForm() : _signUpForm()),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: QPrimaryButton.icon(
+                          icon: const Icon(Icons.login),
+                          fontWeight: FontWeight.bold,
+                          label: _isLogin ? "تسجيل الدخول" : "انشاء حساب",
+                          onPressed: () => print('Login : $_isLogin'),
                         ))
-                    : const SizedBox(),
-              ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 22,
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isCustomer = !_isCustomer;
+                          if (!_isLogin) _isLogin = true;
+                        });
+                      },
+                      child: Text(
+                        _isCustomer
+                            ? "تسجيل دخول الموظفين"
+                            : "تسجيل دخول المستهلكين",
+                        style:
+                            const TextStyle(color: kPrimaryColor, fontSize: 16),
+                      )),
+                  _isLogin
+                      ? TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _isLogin = !_isLogin;
+                            });
+                          },
+                          child: const Text(
+                            "انشاء حساب",
+                            style:
+                                TextStyle(color: kPrimaryColor, fontSize: 16),
+                          ))
+                      : const SizedBox(),
+                ],
+              ),
             )),
           ],
         ),
@@ -212,9 +215,18 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
     return Form(
       key: _formState,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const Text(
+            " البريد الالكتروني للموظف او رقم اشتراك المستهلك",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: TextFormField(
               onChanged: (value) {
                 setState(() {
@@ -227,44 +239,26 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                   return null;
                 }
                 if (!Validator.isFullNameValid(value)) {
-                  return "Please enter a valid Full name";
-                }
-                return null;
-              },
-              controller: _fullName,
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Full Name",
-                  hintStyle: TextStyle(color: kPrimaryDarkerColor)),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              onChanged: (value) {
-                setState(() {
-                  _formState.currentState!.validate();
-                  _validateInput();
-                });
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return null;
-                }
-                if (!Validator.emailFieldValidation(value)) {
-                  return "Please enter a valid email";
+                  return "الرجاء ادخال بريد الكتروني صحيح";
                 }
                 return null;
               },
               controller: _email,
               decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Email",
-                  hintStyle: TextStyle(color: kPrimaryDarkerColor)),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          const Text(
+            "كلمة المرور",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: TextFormField(
               onChanged: (value) {
                 setState(() {
@@ -282,26 +276,21 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                 return null;
               },
               controller: _password,
-              obscureText: _isObscured,
-              decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isObscured = !_isObscured;
-                      });
-                    },
-                    icon: Icon(
-                      _isObscured ? Icons.visibility : Icons.visibility_off,
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Password",
-                  hintStyle: const TextStyle(color: kPrimaryDarkerColor)),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          const Text(
+            "تأكيد كلمة المرور",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: TextFormField(
               onChanged: (value) {
                 setState(() {
@@ -312,9 +301,8 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
               controller: _confirmPassword,
               obscureText: true,
               decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Confirm Password",
-                  hintStyle: TextStyle(color: kPrimaryDarkerColor)),
+                border: InputBorder.none,
+              ),
             ),
           ),
         ],
