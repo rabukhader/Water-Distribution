@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         children: [
           AnimatedPositioned(
-            duration: const Duration(milliseconds: 1200),
+            duration: const Duration(milliseconds: 1600),
             top: moveLogoBlock
                 ? MediaQuery.of(context).size.height * 0.1
                 : MediaQuery.of(context).size.height / 2 - 80,

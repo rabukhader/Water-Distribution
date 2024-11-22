@@ -17,11 +17,13 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
   bool _isObscured = true;
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
+  final TextEditingController _fullName = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
   final TextEditingController _registrationNumber = TextEditingController();
   bool _isLogin = true;
   bool _isCustomer = true;
+  bool _customerCreateAccount = true;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 22,
+                    height: 16,
                   ),
                   TextButton(
                       onPressed: () {
@@ -124,7 +126,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            _isCustomer ? "رقم اشتراك المستهلك" : "الإيميل",
+            _isCustomer ? "رقم اشتراك المستهلك" : "البريد الإلكتروني",
             style: const TextStyle(
               color: Colors.grey,
               fontSize: 16.0,
@@ -150,21 +152,18 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                 }
                 if (_isCustomer) {
                   if (!Validator.isNumericWithLength(value, 9)) {
-                    return "الرجاء ادخال رقم مشترك صحيح";
+                    return "الرجاء ادخال رقم المشترك الصحيح";
                   }
                 } else {
                   if (!Validator.emailFieldValidation(value)) {
-                    return "الرجاء ادخال ايميل صحيح";
+                    return "الرجاء ادخال البريد الإلكتروني الصحيح";
                   }
                 }
                 return null;
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 disabledBorder: InputBorder.none,
                 border: InputBorder.none, // No borders
-                hintText:
-                    _isCustomer ? "مثال: 123456789" : "مثال: example@mail.com",
-                hintStyle: const TextStyle(color: Colors.lightBlue),
               ),
             ),
           ),
@@ -217,9 +216,30 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            " البريد الالكتروني للموظف او رقم اشتراك المستهلك",
-            style: TextStyle(
+          Container(
+            margin: const EdgeInsets.only(bottom: 8.0),
+            alignment: Alignment.center,
+            child: DropdownButton(
+                value: _customerCreateAccount,
+                hint: const Text('اختر نوع الحساب'),
+                items: const [
+                  DropdownMenuItem(
+                    value: true,
+                    child: Text('مستهلك'),
+                  ),
+                  DropdownMenuItem(value: false, child: Text('موظف')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _customerCreateAccount = value ?? false;
+                  });
+                }),
+          ),
+          Text(
+            _customerCreateAccount
+                ? "رقم اشتراك المستهلك"
+                : "البريد الالكتروني للموظف",
+            style: const TextStyle(
               color: Colors.grey,
               fontSize: 16.0,
               fontWeight: FontWeight.w500,
@@ -244,6 +264,38 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                 return null;
               },
               controller: _email,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          const Text(
+            "الاسم الكامل",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: TextFormField(
+              onChanged: (value) {
+                setState(() {
+                  _formState.currentState!.validate();
+                  _validateInput();
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return null;
+                }
+                if (!Validator.isFullNameValid(value)) {
+                  return "الرجاء ادخال الاسم الكامل بشكل صحيح";
+                }
+                return null;
+              },
+              controller: _fullName,
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
