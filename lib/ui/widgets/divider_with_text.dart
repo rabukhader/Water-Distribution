@@ -15,12 +15,15 @@ class DividerWithText extends StatelessWidget {
             endIndent: 8,
           ),
         ),
-        Text(
-          text,
-          style: const TextStyle(
-            color: Colors.grey,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         const Expanded(

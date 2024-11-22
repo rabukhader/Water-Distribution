@@ -54,6 +54,7 @@ class QPrimaryButton extends StatelessWidget {
   final bool isLoading;
 
   final VoidCallback? onPressed;
+  
   final Widget? icon;
 
   final FontWeight? fontWeight;
@@ -66,7 +67,7 @@ class QPrimaryButton extends StatelessWidget {
       disabledColor: color.withOpacity(0.8),
       onPressed: !enabled || isLoading ? null : onPressed,
       minSize: minSize,
-      borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+      borderRadius: const BorderRadius.all(Radius.circular(2.0)),
       child: isLoading
           ? Center(
               child: SizedBox(
@@ -81,11 +82,11 @@ class QPrimaryButton extends StatelessWidget {
               child: icon != null
                   ? Row(
                       children: [
-                        icon!,
-                        const SizedBox(
-                          width: 10,
-                        ),
                         text,
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        icon!,
                       ],
                     )
                   : text,

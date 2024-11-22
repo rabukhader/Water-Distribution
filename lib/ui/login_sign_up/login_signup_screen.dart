@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:water_distribution_management/ui/login_sign_up/widgets/welcome_block.dart';
 import 'package:water_distribution_management/ui/widgets/divider_with_text.dart';
 import 'package:water_distribution_management/ui/widgets/logo_block.dart';
+import 'package:water_distribution_management/utils/buttons.dart';
 import 'package:water_distribution_management/utils/colors.dart';
 import 'package:water_distribution_management/utils/validators.dart';
 
@@ -12,58 +14,102 @@ class LoginSignUpScreen extends StatefulWidget {
 }
 
 class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
-  bool isLogIn = false;
   bool _isObscured = true;
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
-  final TextEditingController _phone = TextEditingController();
+  final TextEditingController _registrationNumber = TextEditingController();
   final TextEditingController _fullName = TextEditingController();
+  bool _isLogin = true;
+  bool _isCustomer = true;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: kWhiteColor,
-      child: Column(
-        children: [
-          LogoBlock(
-            isMinimized: true,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _loginSignUpBlock() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.only(bottom: 300, left: 16.0, right: 16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: const Text(
-                'مرحبا بك في ..',
-                style: TextStyle(fontSize: 14),
-              )),
-          Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width * 0.6,
-              child: const Text(
-                'تطبيق توزيع المياه الذكي',
-                style: TextStyle(fontSize: 24),
-              )),
-          const SizedBox(
-            height: 22,
-          ),
-          const DividerWithText(text: "تسجيل الدخول"),
-          const SizedBox(
-            height: 22,
-          ),
-          _loginForm(),
-        ],
+    return Scaffold(
+      body: Container(
+        color: kWhiteColor,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 32.0,
+            ),
+            const LogoBlock(
+              isMinimized: true,
+            ),
+            const SizedBox(
+              height: 32.0,
+            ),
+            const WelcomeBlock(),
+            const SizedBox(
+              height: 50.0,
+            ),
+            Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: DividerWithText(
+                      text: _isLogin ? "تسجيل الدخول" : "انشاء حساب"),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: _isLogin ? _loginForm() : _signUpForm()),
+                const SizedBox(
+                  height: 50,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: QPrimaryButton.icon(
+                        icon: const Icon(Icons.login),
+                        fontWeight: FontWeight.bold,
+                        label: _isLogin ? "تسجيل الدخول" : "انشاء حساب",
+                        onPressed: () => print('test'),
+                      ))
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 22,
+                ),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isCustomer = !_isCustomer;
+                        if (!_isLogin) _isLogin = true;
+                      });
+                    },
+                    child: Text(
+                      _isCustomer
+                          ? "تسجيل دخول الموظفين"
+                          : "تسجيل دخول المستهلكين",
+                      style: const TextStyle(color: kPrimaryColor, fontSize: 16),
+                    )),
+                _isLogin
+                    ? TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _isLogin = !_isLogin;
+                          });
+                        },
+                        child: const Text(
+                          "انشاء حساب",
+                          style: TextStyle(color: kPrimaryColor, fontSize: 16),
+                        ))
+                    : const SizedBox(),
+              ],
+            )),
+          ],
+        ),
       ),
     );
   }
@@ -72,36 +118,66 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
     return Form(
       key: _formState,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Text(
+            _isCustomer ? "رقم اشتراك المستهلك" : "الإيميل",
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: TextFormField(
-              keyboardType: TextInputType.number,
+              keyboardType: _isCustomer
+                  ? TextInputType.number
+                  : TextInputType.emailAddress,
               onChanged: (value) {
                 setState(() {
                   _formState.currentState!.validate();
                   _validateInput();
                 });
               },
-              controller: _email,
+              controller: _isCustomer ? _registrationNumber : _email,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return null;
                 }
-                if (!Validator.emailFieldValidation(value)) {
-                  return "الرجاء ادخال رقم مشترك صحيح";
+                if (_isCustomer) {
+                  if (!Validator.isNumericWithLength(value, 9)) {
+                    return "الرجاء ادخال رقم مشترك صحيح";
+                  }
+                } else {
+                  if (!Validator.emailFieldValidation(value)) {
+                    return "الرجاء ادخال ايميل صحيح";
+                  }
                 }
                 return null;
               },
               decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "مثال: 123456789",
-                  hintStyle:
-                      TextStyle(color: kPrimaryDarkerColor.withOpacity(0.4))),
+                disabledBorder: InputBorder.none,
+                border: InputBorder.none, // No borders
+                hintText:
+                    _isCustomer ? "مثال: 123456789" : "مثال: example@mail.com",
+                hintStyle: const TextStyle(color: Colors.lightBlue),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 6.0,
+          ),
+          const Text(
+            "كلمة المرور",
+            style: TextStyle(
+              color: Colors.grey, // Baby blue color
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: TextFormField(
               onChanged: (value) {
                 setState(() {
@@ -111,22 +187,22 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
               controller: _password,
               obscureText: _isObscured,
               decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isObscured = !_isObscured;
-                      });
-                    },
-                    icon: Icon(
-                      _isObscured ? Icons.visibility : Icons.visibility_off,
-                      color: kPrimaryColor,
-                    ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isObscured = !_isObscured;
+                    });
+                  },
+                  icon: Icon(
+                    _isObscured ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.lightBlue,
                   ),
-                  border: InputBorder.none,
-                  hintText: "Password",
-                  hintStyle: const TextStyle(color: kPrimaryDarkerColor)),
+                ),
+                border: InputBorder.none, // No borders
+                hintStyle: TextStyle(color: Colors.lightBlue.withOpacity(0.4)),
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -184,32 +260,6 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
               decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: "Email",
-                  hintStyle: TextStyle(color: kPrimaryDarkerColor)),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              onChanged: (value) {
-                setState(() {
-                  _formState.currentState!.validate();
-                  _validateInput();
-                });
-              },
-              keyboardType: TextInputType.number,
-              controller: _phone,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return null;
-                }
-                if (!Validator.phoneNumerValidation(value)) {
-                  return "Please enter a valid Phone Number";
-                }
-                return null;
-              },
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Phone Number",
                   hintStyle: TextStyle(color: kPrimaryDarkerColor)),
             ),
           ),

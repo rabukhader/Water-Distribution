@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:water_distribution_management/ui/home/home_screen.dart';
-import 'package:water_distribution_management/ui/login_sign_up/login-signup-screen.dart';
+import 'package:water_distribution_management/ui/login_sign_up/login_signup_screen.dart';
 import 'package:water_distribution_management/ui/widgets/logo_block.dart';
 
 class SplashScreen extends StatefulWidget {
