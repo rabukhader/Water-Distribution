@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:water_distribution_management/utils/colors.dart';
-import 'package:water_distribution_management/utils/icons.dart';
-
+import 'package:water_distribution_management/ui/home/home_screen.dart';
+import 'package:water_distribution_management/ui/login_sign_up/login-signup-screen.dart';
+import 'package:water_distribution_management/ui/widgets/logo_block.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,85 +11,48 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  
+  bool moveLogoBlock = false;
+
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 1500), () async {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        await _onSplashCompleted();
+        if (2 / 2 == 1) {
+          setState(() {
+            moveLogoBlock = true;
+          });
+          Future.delayed(const Duration(seconds: 1), () {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginSignUpScreen()),
+                (context) => false);
+          });
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+              (context) => false);
+        }
       }
     });
-    super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-            color: kWhiteColor),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container( // Here 
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Image(
-                      image: AssetImage(kLogo),
-                      height: 95,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 12),
-                      color: kGrayColor,
-                      width: 2,
-                      height: MediaQuery.of(context).size.height * 0.11,
-                    ),
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "بلدية جنين",
-                            style: TextStyle(
-                                color: kPrimaryColor,
-                                fontSize: 18,
-                                height: 1,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            "مصلحة المياه",
-                            style: TextStyle(
-                                color: kPrimaryColor,
-                                fontSize: 34,
-                                height: 1,
-                                fontWeight: FontWeight.w700),
-                          ), 
-                          Text(
-                            "التحكم الاكتروني",
-                            style: TextStyle(
-                                color: kPrimaryColor,
-                                fontSize: 26,
-                                height: 1,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      )
-                  ],
-                ),
-              ),
-            ],
+      body: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 1200),
+            top: moveLogoBlock
+                ? MediaQuery.of(context).size.height * 0.1
+                : MediaQuery.of(context).size.height / 2 - 80,
+            left: MediaQuery.of(context).size.width / 2 - 120,
+            child: const LogoBlock(),
           ),
-        ),
+        ],
       ),
     );
-  }
-
-  _onSplashCompleted() async {
-    
-print('rasheed');
   }
 }
