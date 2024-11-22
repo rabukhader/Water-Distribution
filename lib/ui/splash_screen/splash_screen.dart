@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:water_distribution_management/utils/cache_picture.dart';
-import 'package:water_distribution_management/utils/colors.dart';
-import 'package:water_distribution_management/utils/icons.dart';
-
+import 'package:water_distribution_management/ui/home/home_screen.dart';
+import 'package:water_distribution_management/ui/login_sign_up/login-signup-screen.dart';
+import 'package:water_distribution_management/ui/widgets/logo_block.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,71 +11,48 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  
-  @override
-  void initState() {
-    Future.delayed(const Duration(milliseconds: 1500), () async {
-      if (mounted) {
-        await _onSplashCompleted();
-      }
-    });
-    super.initState();
-  }
+  bool moveLogoBlock = false;
 
   @override
-  void didChangeDependencies() {
-    precacheSvgPicture(kLogoIcon);
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        if (2 / 2 == 1) {
+          setState(() {
+            moveLogoBlock = true;
+          });
+          Future.delayed(const Duration(seconds: 1), () {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginSignUpScreen()),
+                (context) => false);
+          });
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+              (context) => false);
+        }
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [kPrimaryColor, kLightOrangeColor])),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                kLogoIcon,
-                height: 350,
-              ),
-              const Text(
-                "Basma",
-                style: TextStyle(
-                    color: kWhiteColor,
-                    fontSize: 44,
-                    fontWeight: FontWeight.w700),
-              )
-            ],
+      body: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 1200),
+            top: moveLogoBlock
+                ? MediaQuery.of(context).size.height * 0.1
+                : MediaQuery.of(context).size.height / 2 - 80,
+            left: MediaQuery.of(context).size.width / 2 - 120,
+            child: const LogoBlock(),
           ),
-        ),
+        ],
       ),
     );
-  }
-
-  _onSplashCompleted() async {
-    
-    // User? user = await GetIt.I<AuthStore>().getUser();
-    // if (user != null) {
-    //   Navigator.pushAndRemoveUntil(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => HomePage(
-    //                 userType: user.type,
-    //               )),
-    //       (route) => false);
-    // } else {
-    //   Navigator.pushAndRemoveUntil(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (c) => const LoginSignUpPage(isLogIn: true)),
-    //       (route) => false);
-    // }
   }
 }

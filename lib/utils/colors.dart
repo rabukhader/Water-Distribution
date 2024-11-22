@@ -44,21 +44,19 @@ extension ColorExt on Color {
 }
 
 class AppColors {
-  static const primaryColor = Color(0xFF7ABA78);
+  static const primaryColor = Color.fromARGB(255, 24, 143, 233);
   static const primaryDarkerColor = Color(0xFF0A6847);
   static const primaryDarkColor = Color(0xFFF6E9B2);
   static const accentColor = Color(0xFFBA2022);
   static const primaryTextColor = Colors.white;
   static const secondaryTextColor = Color(0xFF555555);
-  static const blackTextColor = Color(0xff0C0C0C);
-  static const lightGray = Color(0xFFeaeaff);
   static const blackedColor = Color(0xFF0C0C0C);
 }
 
 const kBlackedColor = AppColors.blackedColor;
 const kWhiteColor = Colors.white;
 const kPrimaryColor = AppColors.primaryColor;
-const kPrimaryDarkerColor = AppColors.primaryDarkerColor;
+const kPrimaryDarkerColor = Color.fromARGB(255, 5, 46, 108);
 const kBorderColor = Color(0xFFb8b8d2);
 const kCloudyBlueColor = Color(0xFFb8b8d2);
 const kGoldenYellowColor = Color(0xFFF3CA52);
@@ -68,3 +66,4 @@ const kDarkBlueColor = Color(0xFF244acd);
 const kBackgroundColor = Color(0xFFfcfdfe);
 const kLightOrangeColor = Color(0xFFffebf0);
 const kLightNavyBlueColor = Color(0xFF2b3f7c);
+const kGrayColor = Color.fromARGB(255, 108, 110, 116);
