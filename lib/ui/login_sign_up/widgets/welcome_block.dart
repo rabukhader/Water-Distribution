@@ -5,7 +5,7 @@ class WelcomeBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.min,
