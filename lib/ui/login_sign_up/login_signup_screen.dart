@@ -24,6 +24,7 @@ class LoginSignUpScreen extends StatefulWidget {
 
 class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
   bool _isObscured = true;
+  bool _isConfirmPasswordObscured = true;
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _phone = TextEditingController();
@@ -402,8 +403,20 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                 return null;
               },
               controller: _password,
-              decoration: const InputDecoration(
+              obscureText: _isObscured,
+              decoration: InputDecoration(
                 border: InputBorder.none,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isObscured = !_isObscured;
+                    });
+                  },
+                  icon: Icon(
+                    _isObscured ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.lightBlue,
+                  ),
+                ),
               ),
             ),
           ),
@@ -425,9 +438,22 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                 });
               },
               controller: _confirmPassword,
-              obscureText: true,
-              decoration: const InputDecoration(
+              obscureText: _isConfirmPasswordObscured,
+              decoration: InputDecoration(
                 border: InputBorder.none,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
+                    });
+                  },
+                  icon: Icon(
+                    _isConfirmPasswordObscured
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: Colors.lightBlue,
+                  ),
+                ),
               ),
             ),
           ),
@@ -470,5 +496,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
     _password.clear();
     _confirmPassword.clear();
     _registrationNumber.clear();
+    _isObscured = true;
+    _isConfirmPasswordObscured = true;
   }
 }
