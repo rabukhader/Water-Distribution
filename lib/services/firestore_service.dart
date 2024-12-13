@@ -15,7 +15,8 @@ class FirestoreService {
   Future addUser({required User user}) async {
     CollectionReference userCollectionRef = firestore.collection('user');
     await userCollectionRef.doc(user.id).set({
-      "fullname": user.fullname
+      "fullname": user.fullname,
+      "registrationStatus" : "running"
     });
   }
 }

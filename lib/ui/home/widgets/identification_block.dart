@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:water_distribution_management/utils/colors.dart';
 
 class IdentificationBlock extends StatelessWidget {
-  const IdentificationBlock({super.key});
+  final String fullName;
+  final String userNumber;
+  const IdentificationBlock(
+      {super.key, required this.fullName, required this.userNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -11,13 +14,13 @@ class IdentificationBlock extends StatelessWidget {
       decoration: BoxDecoration(
           color: kPrimaryColor.withOpacity(0.1),
           borderRadius: const BorderRadius.all(Radius.circular(5))),
-      child: const Column(
+      child: Column(
         children: [
           Row(
-            children: [Text("رقم الاشتراك : "), Text("123456789")],
+            children: [const Text("رقم الاشتراك : "), Text(userNumber)],
           ),
           Row(
-            children: [Text("اسم المشترك : "), Text("معتز حمدي عبد الله")],
+            children: [const Text("اسم المشترك : "), Text(fullName)],
           ),
         ],
       ),

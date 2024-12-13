@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:water_distribution_management/model/user.dart';
-import 'package:water_distribution_management/ui/home/widgets/identification_block.dart';
-import 'package:water_distribution_management/ui/home/widgets/registration_status.dart';
+import 'package:water_distribution_management/ui/home/control_page/control_page_view.dart';
+import 'package:water_distribution_management/ui/home/customer_page/customer_page_view.dart';
 import 'package:water_distribution_management/ui/widgets/logo_block.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,24 +11,19 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Column(
             children: [
-              LogoBlock(
+              const LogoBlock(
                 isMinimized: true,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: IdentificationBlock(),
-              ),
-              RegistrationStatus(),
-              
+              userType == UserType.customer ? const CustomerPageView() : const ControlPageView(),
             ],
           ),
         ),

@@ -4,36 +4,37 @@ import 'package:water_distribution_management/utils/colors.dart';
 import 'package:water_distribution_management/utils/fonts.dart';
 
 class QPrimaryButton extends StatelessWidget {
-  const QPrimaryButton({
-    super.key,
-    required this.label,
-    this.onPressed,
-    this.color = kButtonColor,
-    this.textColor = Colors.white,
-    this.minSize = 50,
-    this.fontSize = 17,
-    this.fontWeight,
-    this.isLoading = false,
-    this.loaderColor,
-    this.enabled = true,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16),
-  }) : icon = null;
+  const QPrimaryButton(
+      {super.key,
+      required this.label,
+      this.onPressed,
+      this.color = kButtonColor,
+      this.textColor = Colors.white,
+      this.minSize = 50,
+      this.fontSize = 17,
+      this.fontWeight,
+      this.isLoading = false,
+      this.loaderColor,
+      this.enabled = true,
+      this.padding = const EdgeInsets.symmetric(horizontal: 16),
+      this.toRight = false})
+      : icon = null;
 
-  const QPrimaryButton.icon({
-    super.key,
-    required this.label,
-    this.onPressed,
-    this.color = kButtonColor,
-    this.textColor = Colors.white,
-    this.loaderColor,
-    this.minSize = 50,
-    this.fontSize = 17,
-    this.fontWeight,
-    this.isLoading = false,
-    this.enabled = true,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16),
-    required this.icon,
-  });
+  const QPrimaryButton.icon(
+      {super.key,
+      required this.label,
+      this.onPressed,
+      this.color = kButtonColor,
+      this.textColor = Colors.white,
+      this.loaderColor,
+      this.minSize = 50,
+      this.fontSize = 17,
+      this.fontWeight,
+      this.isLoading = false,
+      this.enabled = true,
+      this.padding = const EdgeInsets.symmetric(horizontal: 16),
+      required this.icon,
+      this.toRight = false});
 
   final Color color;
 
@@ -54,10 +55,12 @@ class QPrimaryButton extends StatelessWidget {
   final bool isLoading;
 
   final VoidCallback? onPressed;
-  
+
   final Widget? icon;
 
   final FontWeight? fontWeight;
+
+  final bool toRight;
 
   @override
   Widget build(BuildContext context) {
@@ -82,11 +85,15 @@ class QPrimaryButton extends StatelessWidget {
               child: icon != null
                   ? Row(
                       children: [
-                        text,
-                        const SizedBox(
-                          width: 30,
+                        toRight == true ? icon! : const SizedBox(),
+                        SizedBox(
+                          width: toRight == true ? 30 : 0,
                         ),
-                        icon!,
+                        text,
+                        SizedBox(
+                          width: toRight == false ? 30 : 0,
+                        ),
+                        toRight == false ? icon! : const SizedBox(),
                       ],
                     )
                   : text,
