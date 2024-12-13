@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:water_distribution_management/model/user.dart';
+import 'package:water_distribution_management/services/auth_store.dart';
+import 'package:water_distribution_management/services/firestore_service.dart';
 import 'package:water_distribution_management/ui/home/home_screen.dart';
 import 'package:water_distribution_management/ui/login_sign_up/login_signup_screen.dart';
 import 'package:water_distribution_management/ui/widgets/logo_block.dart';
@@ -16,9 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () async {
       if (mounted) {
-        if (2 / 2 != 1) {
+        User? user = await GetIt.I<AuthStore>().getUser();
+        if (user == null) {
           setState(() {
             moveLogoBlock = true;
           });
@@ -29,10 +34,21 @@ class _SplashScreenState extends State<SplashScreen> {
                 (context) => false);
           });
         } else {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
-              (context) => false);
+          if (user.email.contains('customer')) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const HomeScreen(
+                          userType: UserType.customer,
+                        )));
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const HomeScreen(
+                          userType: UserType.control,
+                        )));
+          }
         }
       }
     });
