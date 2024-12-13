@@ -6,10 +6,16 @@ import 'package:water_distribution_management/app/water_app.dart';
 import 'package:water_distribution_management/services/auth_store.dart';
 import 'package:water_distribution_management/services/firebase_auth_service.dart';
 import 'package:water_distribution_management/services/firestore_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
 
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent));

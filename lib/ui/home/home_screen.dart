@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:water_distribution_management/model/user.dart';
 import 'package:water_distribution_management/ui/home/widgets/identification_block.dart';
 import 'package:water_distribution_management/ui/home/widgets/registration_status.dart';
 import 'package:water_distribution_management/ui/widgets/logo_block.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+    final UserType userType;
+
+  const HomeScreen({super.key, required this.userType});
 
   @override
   Widget build(BuildContext context) {
