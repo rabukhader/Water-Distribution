@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:water_distribution_management/model/user.dart';
 import 'package:water_distribution_management/services/auth_store.dart';
-import 'package:water_distribution_management/services/firestore_service.dart';
 import 'package:water_distribution_management/ui/home/home_screen.dart';
 import 'package:water_distribution_management/ui/login_sign_up/login_signup_screen.dart';
 import 'package:water_distribution_management/ui/widgets/logo_block.dart';
