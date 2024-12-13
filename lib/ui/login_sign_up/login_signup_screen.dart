@@ -330,7 +330,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                     return "الرجاء ادخال رقم الاشتراك الصحيح المكون من 9 خانات";
                   }
                 } else {
-                  if (!Validator.isFullNameValid(value)) {
+                  if (!Validator.emailFieldValidation(value)) {
                     return "الرجاء ادخال بريد الكتروني صحيح";
                   }
                 }
