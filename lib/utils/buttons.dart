@@ -17,6 +17,7 @@ class QPrimaryButton extends StatelessWidget {
       this.loaderColor,
       this.enabled = true,
       this.padding = const EdgeInsets.symmetric(horizontal: 16),
+      this.distanceToIcon = 30,
       this.toRight = false})
       : icon = null;
 
@@ -33,6 +34,7 @@ class QPrimaryButton extends StatelessWidget {
       this.isLoading = false,
       this.enabled = true,
       this.padding = const EdgeInsets.symmetric(horizontal: 16),
+      this.distanceToIcon = 30,
       required this.icon,
       this.toRight = false});
 
@@ -49,6 +51,8 @@ class QPrimaryButton extends StatelessWidget {
   final double fontSize;
 
   final double minSize;
+
+  final double distanceToIcon;
 
   final bool enabled;
 
@@ -87,11 +91,11 @@ class QPrimaryButton extends StatelessWidget {
                       children: [
                         toRight == true ? icon! : const SizedBox(),
                         SizedBox(
-                          width: toRight == true ? 30 : 0,
+                          width: toRight == true ? distanceToIcon : 0,
                         ),
                         text,
                         SizedBox(
-                          width: toRight == false ? 30 : 0,
+                          width: toRight == false ? distanceToIcon : 0,
                         ),
                         toRight == false ? icon! : const SizedBox(),
                       ],

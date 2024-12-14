@@ -7,6 +7,7 @@ import 'package:water_distribution_management/ui/home/control_page/control_page_
 import 'package:water_distribution_management/ui/home/model/home_page_buttons.dart';
 import 'package:water_distribution_management/ui/home/widgets/identification_block.dart';
 import 'package:water_distribution_management/ui/splash_screen/splash_screen.dart';
+import 'package:water_distribution_management/ui/statistics_and_reports/statistics_and_reports_view.dart';
 import 'package:water_distribution_management/utils/buttons.dart';
 
 class ControlPageView extends StatefulWidget {
@@ -31,7 +32,10 @@ class _ControlPageViewState extends State<ControlPageView> {
       HomePageButtons(
           title: "تقارير و احصائيات",
           icon: const Icon(Icons.bar_chart),
-          onTap: () => print('onTap3')),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const StatisticsReportsView()))),
       HomePageButtons(
           title: "اللجنة و التنظيم",
           icon: const Icon(Icons.people),
@@ -65,7 +69,7 @@ class _ControlPageViewState extends State<ControlPageView> {
                         child: QPrimaryButton.icon(
                           label: e.title,
                           icon: e.icon,
-                          onPressed: () => e.onTap,
+                          onPressed: () => e.onTap.call(),
                           toRight: true,
                           minSize: 40,
                         ),
