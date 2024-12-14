@@ -6,8 +6,7 @@ import 'package:water_distribution_management/services/auth_store.dart';
 import 'package:water_distribution_management/ui/home/widgets/identification_block.dart';
 import 'package:water_distribution_management/ui/statistics_and_reports/statistics_and_reports_view_model.dart';
 import 'package:water_distribution_management/ui/widgets/logo_block.dart';
-import 'package:water_distribution_management/utils/buttons.dart';
-import 'package:water_distribution_management/utils/colors.dart';
+import 'package:water_distribution_management/ui/widgets/page_sub_title_with_back_button.dart';
 
 class StatisticsReportsView extends StatefulWidget {
   const StatisticsReportsView({super.key});
@@ -46,42 +45,8 @@ class _StatisticsReportsViewState extends State<StatisticsReportsView> {
                   const SizedBox(
                     height: 60,
                   ),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Centered Text
-                      const Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 12.0),
-                          child: Text(
-                            "تقارير و احصائيات",
-                            style:
-                                TextStyle(fontSize: 24, color: kPrimaryColor),
-                          ),
-                        ),
-                      ),
-                      // Button near the top right with margin
-                      Positioned(
-                        top: 1, // Adjust the vertical position
-                        right: 10, // Adjust the horizontal position
-                        child: QPrimaryButton.icon(
-                          label: "للخلف",
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                          ),
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            size: 22,
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                          toRight: true,
-                          minSize: 10,
-                          color: kPrimaryColor,
-                          distanceToIcon: 10,
-                        ),
-                      ),
-                    ],
+                  const PageSubTitleWithBackButton(
+                    subTitle: "تقارير و احصائيات",
                   ),
                   const SizedBox(
                     height: 50,

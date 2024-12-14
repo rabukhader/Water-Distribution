@@ -6,6 +6,7 @@ import 'package:water_distribution_management/services/firebase_auth_service.dar
 import 'package:water_distribution_management/ui/home/control_page/control_page_view_model.dart';
 import 'package:water_distribution_management/ui/home/model/home_page_buttons.dart';
 import 'package:water_distribution_management/ui/home/widgets/identification_block.dart';
+import 'package:water_distribution_management/ui/monitor/monitor_view.dart';
 import 'package:water_distribution_management/ui/splash_screen/splash_screen.dart';
 import 'package:water_distribution_management/ui/statistics_and_reports/statistics_and_reports_view.dart';
 import 'package:water_distribution_management/utils/buttons.dart';
@@ -24,7 +25,8 @@ class _ControlPageViewState extends State<ControlPageView> {
       HomePageButtons(
           title: "لوحة التحكم",
           icon: const Icon(Icons.computer),
-          onTap: () => print('onTap1')),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MonitorView()))),
       HomePageButtons(
           title: "جدول توزيع المياه",
           icon: const Icon(Icons.calendar_today),
