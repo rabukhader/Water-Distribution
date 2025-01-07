@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:water_distribution_management/services/auth_store.dart';
 import 'package:water_distribution_management/ui/home/widgets/identification_block.dart';
+import 'package:water_distribution_management/ui/monitor/confirm_monitoring_choices_sheet.dart';
 import 'package:water_distribution_management/ui/monitor/monitor_view_model.dart';
 import 'package:water_distribution_management/ui/widgets/logo_block.dart';
 import 'package:water_distribution_management/ui/widgets/page_sub_title_with_back_button.dart';
@@ -67,27 +68,6 @@ class SwitchListBlock extends StatefulWidget {
 }
 
 class _SwitchListBlockState extends State<SwitchListBlock> {
-  bool isAutoControl = false; // Top toggle
-  final List<bool> switchValues = [
-    true,
-    true,
-    false,
-    true,
-    true,
-    false,
-    true
-  ]; // Switch states
-
-  final List<String> labels = [
-    "عرابة",
-    "قباطية (المنطقة الشرقية)",
-    "قباطية (المنطقة الغربية)",
-    "الزبابدة (خط رقم 1)",
-    "الزبابدة (خط رقم 2)",
-    "صانور",
-    "مسلية",
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -98,12 +78,11 @@ class _SwitchListBlockState extends State<SwitchListBlock> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Switch(
-                value: isAutoControl,
+                value: Provider.of<MonitorViewModel>(context).isAutomated,
                 activeColor: Colors.green,
                 onChanged: (value) {
-                  setState(() {
-                    isAutoControl = value;
-                  });
+                  Provider.of<MonitorViewModel>(context, listen: false)
+                      .setAutomation = value;
                 },
               ),
               const Text(
@@ -119,35 +98,42 @@ class _SwitchListBlockState extends State<SwitchListBlock> {
                 color: Colors.blue.shade50,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: labels.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Text(
-                          labels[index],
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        trailing: Switch(
-                          value: switchValues[index],
-                          activeColor: Colors.green,
-                          onChanged: (value) {
-                            setState(() {
-                              switchValues[index] = value;
-                            });
-                          },
-                        ),
-                      ),
-                      if (index < labels.length - 1)
-                        const Divider(
-                          color: Colors.grey,
-                          height: 1,
-                          indent: 16,
-                          endIndent: 16,
-                        ),
-                    ],
+              child: Consumer<MonitorViewModel>(
+                builder: (context, monitorViewModel, child) {
+                  return ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: monitorViewModel.cities.length,
+                    itemBuilder: (context, index) {
+                      final city = monitorViewModel.cities[index];
+                      return Column(
+                        children: [
+                          ListTile(
+                            title: Text(
+                              city.cityName,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            trailing: Switch(
+                              value: city.openValve,
+                              activeColor: Colors.green,
+                              onChanged: monitorViewModel.isAutomated
+                                  ? null // Disable the switch when automation is on
+                                  : (value) {
+                                      setState(() {
+                                        city.openValve = value;
+                                      });
+                                    },
+                            ),
+                          ),
+                          if (index < monitorViewModel.cities.length - 1)
+                            const Divider(
+                              color: Colors.grey,
+                              height: 1,
+                              indent: 16,
+                              endIndent: 16,
+                            ),
+                        ],
+                      );
+                    },
                   );
                 },
               ),
@@ -158,8 +144,13 @@ class _SwitchListBlockState extends State<SwitchListBlock> {
             children: [
               Expanded(
                 child: QPrimaryButton.icon(
-                  onPressed: () {
-                    // Handle apply button action
+                  onPressed: () async {
+                    bool confirmed = await ConfirmMonitoringCoicesSheet.show(
+                        context: context);
+                    print(confirmed);
+                    if (confirmed) {
+                      Navigator.pop(context);
+                    }
                   },
                   icon: const Icon(Icons.check),
                   label: "تطبيق",
