@@ -7,8 +7,10 @@ import 'package:water_distribution_management/ui/home/control_page/control_page_
 import 'package:water_distribution_management/ui/home/model/home_page_buttons.dart';
 import 'package:water_distribution_management/ui/home/widgets/identification_block.dart';
 import 'package:water_distribution_management/ui/monitor/monitor_view.dart';
+import 'package:water_distribution_management/ui/org_decisions/org_decisions_view.dart';
 import 'package:water_distribution_management/ui/splash_screen/splash_screen.dart';
 import 'package:water_distribution_management/ui/statistics_and_reports/statistics_and_reports_view.dart';
+import 'package:water_distribution_management/ui/water_distribution_table_screen/water_distribution_table_view.dart';
 import 'package:water_distribution_management/utils/buttons.dart';
 
 class ControlPageView extends StatefulWidget {
@@ -30,7 +32,10 @@ class _ControlPageViewState extends State<ControlPageView> {
       HomePageButtons(
           title: "جدول توزيع المياه",
           icon: const Icon(Icons.calendar_today),
-          onTap: () => print('onTap2')),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const WaterDistributionTableView()))),
       HomePageButtons(
           title: "تقارير و احصائيات",
           icon: const Icon(Icons.bar_chart),
@@ -41,7 +46,8 @@ class _ControlPageViewState extends State<ControlPageView> {
       HomePageButtons(
           title: "اللجنة و التنظيم",
           icon: const Icon(Icons.people),
-          onTap: () => print('onTap4')),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const OrgDecisions()))),
     ];
     return ChangeNotifierProvider(
       create: (context) => ControlPageViewModel(
