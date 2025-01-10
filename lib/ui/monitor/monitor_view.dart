@@ -46,10 +46,12 @@ class MonitorView extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.55,
-                      child: const SwitchListBlock())
+                  provider.isLoading
+                      ? const CircularProgressIndicator()
+                      : SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.55,
+                          child: const SwitchListBlock())
                 ],
               ),
             ),
@@ -147,8 +149,10 @@ class _SwitchListBlockState extends State<SwitchListBlock> {
                   onPressed: () async {
                     bool confirmed = await ConfirmMonitoringCoicesSheet.show(
                         context: context);
-                    print(confirmed);
                     if (confirmed) {
+                      await Provider.of<MonitorViewModel>(context,
+                              listen: false)
+                          .updateDatabase(); // Call the database update
                       Navigator.pop(context);
                     }
                   },
