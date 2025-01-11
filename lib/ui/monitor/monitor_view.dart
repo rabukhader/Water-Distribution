@@ -46,7 +46,7 @@ class MonitorView extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  provider.isLoading
+                  provider.isLoading || provider.pump == null
                       ? const CircularProgressIndicator()
                       : SizedBox(
                           width: MediaQuery.of(context).size.width,
@@ -80,7 +80,8 @@ class _SwitchListBlockState extends State<SwitchListBlock> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Switch(
-                value: Provider.of<MonitorViewModel>(context).isAutomated,
+                value:
+                    Provider.of<MonitorViewModel>(context).isAutomated ?? false,
                 activeColor: Colors.green,
                 onChanged: (value) {
                   Provider.of<MonitorViewModel>(context, listen: false)
@@ -89,6 +90,24 @@ class _SwitchListBlockState extends State<SwitchListBlock> {
               ),
               const Text(
                 "التحكم الآلي",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Switch(
+                value: Provider.of<MonitorViewModel>(context).pump ?? false,
+                activeColor: Colors.green,
+                onChanged: (value) {
+                  Provider.of<MonitorViewModel>(context, listen: false)
+                      .setPump = value;
+                },
+              ),
+              const Text(
+                "المضخة",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
@@ -115,9 +134,9 @@ class _SwitchListBlockState extends State<SwitchListBlock> {
                               style: const TextStyle(fontSize: 16),
                             ),
                             trailing: Switch(
-                              value: city.openValve,
+                              value: city.openValve ?? false,
                               activeColor: Colors.green,
-                              onChanged: monitorViewModel.isAutomated
+                              onChanged: monitorViewModel.isAutomated == true
                                   ? null // Disable the switch when automation is on
                                   : (value) {
                                       setState(() {

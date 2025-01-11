@@ -19,11 +19,19 @@ class MonitorViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  bool _isAutomated = false;
-  bool get isAutomated => _isAutomated;
+  bool? _isAutomated = false;
+  bool? get isAutomated => _isAutomated;
 
   set setAutomation(bool value) {
     _isAutomated = value;
+    notifyListeners();
+  }
+
+  bool? _pump = false;
+  bool? get pump => _pump;
+
+  set setPump(bool value) {
+    _pump = value;
     notifyListeners();
   }
 
@@ -79,9 +87,9 @@ class MonitorViewModel extends ChangeNotifier {
       // Get a reference to the database
       databaseRef = secondaryDatabase.ref();
 
+      await databaseRef.child("online").set(false);
+      
       DataSnapshot snapshot = await databaseRef.get();
-
-      await databaseRef.child("online").set(true);
 
       await Future.delayed(const Duration(seconds: 3));
 
@@ -89,11 +97,22 @@ class MonitorViewModel extends ChangeNotifier {
         // Parse the data (if needed) and modify it
         Map<String, dynamic>? data =
             Map<String, dynamic>.from(snapshot.value as Map);
+            print("here the check - ${data['online']}");
 
-        cities[0].openValve = data['valve1'];
-        cities[1].openValve = data['valve2'];
-        cities[2].openValve = data['valve3'];
-        _isAutomated = data['isAutomated'];
+        if (data['online'] == true) {
+          cities[0].openValve = data['valve1'];
+          cities[1].openValve = data['valve2'];
+          cities[2].openValve = data['valve3'];
+          _isAutomated = data['isAutomated'];
+          _pump = data['pump'];
+        } else {
+          cities[0].openValve = null;
+          cities[1].openValve = null;
+          cities[2].openValve = null;
+          _isAutomated = null;
+          _pump = null;
+          _startShortPulling();
+        }
 
         print("Updated Database Data: $data");
       } else {
@@ -112,15 +131,57 @@ class MonitorViewModel extends ChangeNotifier {
       await databaseRef.child("valve2").set(cities[1].openValve);
       await databaseRef.child("valve3").set(cities[2].openValve);
       await databaseRef.child("isAutomated").set(_isAutomated);
+      await databaseRef.child("pump").set(_pump);
     } catch (e) {
       print("Error updating database: $e");
+    }
+  }
+
+  _startShortPulling() async {
+    try {
+      while (true) {
+        DataSnapshot snapshot = await databaseRef.get();
+
+        if (snapshot.exists) {
+          Map<String, dynamic>? data =
+              Map<String, dynamic>.from(snapshot.value as Map);
+
+          if (data['online'] == true) {
+            // Update the state and exit the polling loop
+            cities[0].openValve = data['valve1'];
+            cities[1].openValve = data['valve2'];
+            cities[2].openValve = data['valve3'];
+            _isAutomated = data['isAutomated'];
+            _pump = data['pump'];
+            notifyListeners();
+            print("Online is now true. Exiting short polling.");
+            break;
+          } else {
+            // Handle offline state during polling
+            cities[0].openValve = null;
+            cities[1].openValve = null;
+            cities[2].openValve = null;
+            _isAutomated = null;
+            _pump = null;
+            notifyListeners();
+            print("Still offline. Retrying...");
+          }
+        } else {
+          print("Database node does not exist or is empty.");
+        }
+
+        // Wait for a short duration before the next check
+        await Future.delayed(const Duration(seconds: 2));
+      }
+    } catch (e) {
+      print("Error during short polling: $e");
     }
   }
 }
 
 class CityValveStatus {
   final String cityName;
-  bool openValve;
+  bool? openValve;
 
   CityValveStatus({required this.cityName, required this.openValve});
 }
