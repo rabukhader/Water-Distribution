@@ -24,6 +24,7 @@ class MonitorViewModel extends ChangeNotifier {
 
   set setAutomation(bool value) {
     _isAutomated = value;
+    notifyListeners();
   }
 
   late FirebaseApp secondaryApp;
@@ -80,6 +81,10 @@ class MonitorViewModel extends ChangeNotifier {
 
       DataSnapshot snapshot = await databaseRef.get();
 
+      await databaseRef.child("online").set(true);
+
+      await Future.delayed(const Duration(seconds: 3));
+
       if (snapshot.exists) {
         // Parse the data (if needed) and modify it
         Map<String, dynamic>? data =
@@ -88,6 +93,7 @@ class MonitorViewModel extends ChangeNotifier {
         cities[0].openValve = data['valve1'];
         cities[1].openValve = data['valve2'];
         cities[2].openValve = data['valve3'];
+        _isAutomated = data['isAutomated'];
 
         print("Updated Database Data: $data");
       } else {
@@ -105,6 +111,7 @@ class MonitorViewModel extends ChangeNotifier {
       await databaseRef.child("valve1").set(cities[0].openValve);
       await databaseRef.child("valve2").set(cities[1].openValve);
       await databaseRef.child("valve3").set(cities[2].openValve);
+      await databaseRef.child("isAutomated").set(_isAutomated);
     } catch (e) {
       print("Error updating database: $e");
     }
