@@ -85,7 +85,7 @@ class _SwitchListBlockState extends State<SwitchListBlock> {
                 activeColor: Colors.green,
                 onChanged: (value) {
                   Provider.of<MonitorViewModel>(context, listen: false)
-                      .setAutomation = value;
+                      .setAutomation(value);
                 },
               ),
               const Text(

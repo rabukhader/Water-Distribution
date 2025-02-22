@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -22,9 +23,10 @@ class MonitorViewModel extends ChangeNotifier {
   bool? _isAutomated = false;
   bool? get isAutomated => _isAutomated;
 
-  set setAutomation(bool value) {
+  setAutomation(bool value) async {
     _isAutomated = value;
     notifyListeners();
+    await handleAutomatedValves();
   }
 
   bool? _pump = false;
@@ -88,7 +90,7 @@ class MonitorViewModel extends ChangeNotifier {
       databaseRef = secondaryDatabase.ref();
 
       await databaseRef.child("online").set(false);
-      
+
       DataSnapshot snapshot = await databaseRef.get();
 
       await Future.delayed(const Duration(seconds: 3));
@@ -97,7 +99,7 @@ class MonitorViewModel extends ChangeNotifier {
         // Parse the data (if needed) and modify it
         Map<String, dynamic>? data =
             Map<String, dynamic>.from(snapshot.value as Map);
-            print("here the check - ${data['online']}");
+        print("here the check - ${data['online']}");
 
         if (data['online'] == true) {
           cities[0].openValve = data['valve1'];
@@ -176,6 +178,52 @@ class MonitorViewModel extends ChangeNotifier {
     } catch (e) {
       print("Error during short polling: $e");
     }
+  }
+
+  Future<void> handleAutomatedValves() async {
+    await resetValves();
+    while (_isAutomated == true) {
+      await databaseRef.child("valve1").set(true);
+      cities[0].openValve = true;
+      notifyListeners();
+
+      await Future.delayed(const Duration(seconds: 5));
+      await databaseRef.child("valve1").set(false);
+      cities[0].openValve = false;
+      notifyListeners();
+
+      await databaseRef.child("valve2").set(true);
+      cities[1].openValve = true;
+      notifyListeners();
+
+      await Future.delayed(const Duration(seconds: 15));
+      await databaseRef.child("valve2").set(false);
+      cities[1].openValve = false;
+      notifyListeners();
+
+      await databaseRef.child("valve3").set(true);
+      cities[2].openValve = true;
+      notifyListeners();
+
+      await Future.delayed(const Duration(seconds: 25));
+      await databaseRef.child("valve3").set(true);
+      cities[2].openValve = false;
+      notifyListeners();
+
+      await Future.delayed(const Duration(seconds: 2));
+    }
+  }
+
+  Future<void> resetValves() async {
+    await databaseRef.child("valve1").set(false);
+    cities[0].openValve = false;
+    notifyListeners();
+    await databaseRef.child("valve2").set(false);
+    cities[1].openValve = false;
+    notifyListeners();
+    await databaseRef.child("valve3").set(false);
+    cities[2].openValve = false;
+    notifyListeners();
   }
 }
 
